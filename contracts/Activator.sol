@@ -20,21 +20,17 @@ contract Activator {
         uint value;
     }
 
-    // Allowed withdrawals of unrecognised consumers
-    // When the consumer is activated, delete consumer from this mapping
     mapping(uint => Activation) activations;
     address public tracker;
-    // minAmount is the gas amount to create the ConsumerContract
     uint public minAmount;
 
     event onCreateConsumerActivation(uint consumerId);
-    event onActivationConfirmed(uint consumerId);
+    event onActivationConfirmed(uint consumerId, address consumerContract);
 
-    // Tracker send an amount of ether to this when create it
-    constructor(uint _minAmount) public payable {
+    constructor(uint _minAmount) public {
         // Tracker creates this contract
         tracker = address(msg.sender);
-        // Min amount. Default is 0.01 Ether.
+        // Min amount. Default is 0.01 KWei.
         minAmount = _minAmount;
     }
 
@@ -49,12 +45,17 @@ contract Activator {
     }
 
     modifier activationExists(uint consumerId){
-        require(activations[consumerId].user != address(0));
+        require(activations[consumerId].user != address(0), "Activation is not exits");
         _;
     }
 
     modifier activationNotExists(uint consumerId){
-        require(activations[consumerId].user == address(0));
+        require(activations[consumerId].user == address(0), "Activation is already exists");
+        _;
+    }
+
+    modifier valueHigherThanMinAmount(){
+        require(msg.value >= minAmount, "You need to send more Ether to activate this contract");
         _;
     }
 
@@ -62,12 +63,8 @@ contract Activator {
     public
     payable
     activationNotExists(consumerId)
+    valueHigherThanMinAmount
     {
-        require(
-            msg.value >= minAmount,
-            "You need to send more Ether to activate this contract"
-        );
-
         activations[consumerId].user = msg.sender;
         activations[consumerId].value = msg.value;
 
@@ -77,7 +74,10 @@ contract Activator {
     // User MUST manually call this function to get back their Ether when:
     //  - They send Ether to activate a activated consumer or a non exists consumer
     // Since Tracker will DO NOTHING if the target consumer is not exists in database or is activated
-    function withdraw(uint consumerId) public onlyActivationOwner(consumerId) {
+    function withdraw(uint consumerId)
+    public
+    activationExists(consumerId)
+    onlyActivationOwner(consumerId) {
 
         uint returnValue = activations[consumerId].value;
         delete activations[consumerId];
@@ -108,33 +108,25 @@ contract Activator {
     // If NO:
     //  1) Tracker return response error & do nothing to the ActivatorContract.
 
-    //If a contract receives Ether (without a function being called), the fallback function is executed
-    //If it does not have a fallback function,
-    //the Ether will be rejected (by throwing an exception).
-    //During the execution of the fallback function, the contract can only rely on the “gas stipend” (2300 gas) being available to it at that time.
-
-
-    // If Tracker call this, the gas to create the new contract is calculated for this contract or the Tracker?
     function confirmActivation(uint consumerId)
     public
     onlyTracker
     activationExists(consumerId)
     returns (address)
     {
-        uint prepaidPayment = activations[consumerId].value - minAmount;
-        // TODO: check if tracker paid gas for creating new contract
+        uint prepaidPayment = activations[consumerId].value;
+
+        // Activator use its money to send to consumer. But Tracker pays the gas for that.
         Consumer consumerContract = (new Consumer).value(prepaidPayment)(consumerId);
-        emit onActivationConfirmed(consumerId);
 
         delete activations[consumerId];
-        return consumerContract;
-        // address(consumerContract) ?
+
+        emit onActivationConfirmed(consumerId, consumerContract);
     }
 
     function getActivation(uint consumerId)
     public
     view
-    activationExists(consumerId)
     returns (address, uint)
     {
         return (activations[consumerId].user, activations[consumerId].value);
