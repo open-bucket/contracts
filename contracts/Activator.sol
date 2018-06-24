@@ -107,7 +107,6 @@ contract Activator {
     //  4) call transfer() on ActivatorContract
     // If NO:
     //  1) Tracker return response error & do nothing to the ActivatorContract.
-
     function confirmActivation(uint consumerId)
     public
     onlyTracker

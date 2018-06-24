@@ -13,7 +13,7 @@ contract('Activator', accounts => {
         activatorInstance = await Activator.new(minAmount, {
             from: tracker,
             gasPrice
-        })
+        });
     });
 
     //https://github.com/vitiko/solidity-test-example/blob/master/test/Congress.js
@@ -42,7 +42,7 @@ contract('Activator', accounts => {
         // THEN
         assert.equal(actualUser, account);
         assert.equal(actualValue.toString(10), expectedValue);
-        assert.equal(event.args.consumerId.toString(10), expectedConsumerId)
+        assert.equal(event.args.consumerId.toString(10), expectedConsumerId);
     });
 
     it('should NOT able to create duplicate activation', async () => {
@@ -59,8 +59,8 @@ contract('Activator', accounts => {
         // THEN
             .then(() => assert(false, 'should revert'))
             .catch(() => {
-                assert(true, 'should revert')
-            })
+                assert(true, 'should revert');
+            });
     });
 
     it('should NOT able to create activation with value lower than min amount', async () => {
@@ -76,8 +76,8 @@ contract('Activator', accounts => {
         // THEN
             .then(() => assert(false, 'should revert'))
             .catch(() => {
-                assert(true, 'should revert')
-            })
+                assert(true, 'should revert');
+            });
     });
 
     it('should able to withdraw from existing activation & correct owner', async () => {
@@ -92,7 +92,7 @@ contract('Activator', accounts => {
 
         const valueWithdraw = afterWithdraw - beforeWithdraw;
 
-        assert.isAbove(valueWithdraw, 0)
+        assert.isAbove(valueWithdraw, 0);
     });
 
 
@@ -105,7 +105,7 @@ contract('Activator', accounts => {
         // THEN
             .then(() => assert(false, 'should revert'))
             .catch(() => {
-                assert(true, 'should revert')
+                assert(true, 'should revert');
             });
     });
 
@@ -119,7 +119,7 @@ contract('Activator', accounts => {
         // THEN
             .then(() => assert(false, 'should revert'))
             .catch(() => {
-                assert(true, 'should revert')
+                assert(true, 'should revert');
             });
     });
 
@@ -175,6 +175,5 @@ contract('Activator', accounts => {
 
         // Tracker pays the gas for the operation
         assert.isBelow(trackerCost.toString(10), 0);
-    })
-
+    });
 });

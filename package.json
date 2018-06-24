@@ -1,8 +1,7 @@
 {
-  "name": "contracts",
-  "version": "1.0.0",
-  "description": "",
-  "main": "truffle-config.js",
+  "name": "@open-bucket/contracts",
+  "version": "0.0.1",
+  "main": "index.js",
   "directories": {
     "test": "test"
   },
@@ -11,15 +10,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vunguyenhung/contracts.git"
+    "url": "git+https://github.com/open-bucket/contracts.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "open-bucket",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vunguyenhung/contracts/issues"
+    "url": "https://github.com/open-bucket/contracts/issues"
   },
-  "homepage": "https://github.com/vunguyenhung/contracts#readme",
+  "homepage": "https://github.com/open-bucket/contracts#readme",
   "dependencies": {
-    "bluebird": "^3.5.1"
-  }
+    "bluebird": "^3.5.1",
+    "eslint": "^5.0.0",
+    "solc": "^0.4.24",
+    "web3": "^1.0.0-beta.34"
+  },
+  "devDependencies": {},
+  "description": ""
 }
