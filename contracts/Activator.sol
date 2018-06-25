@@ -111,7 +111,6 @@ contract Activator {
     public
     onlyTracker
     activationExists(consumerId)
-    returns (address)
     {
         uint prepaidPayment = activations[consumerId].value;
 
