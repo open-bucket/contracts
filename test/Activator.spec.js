@@ -35,7 +35,7 @@ contract('Activator', accounts => {
         await activatorInstance.createActivation(expectedConsumerId, {value: expectedValue, gasPrice});
         const [actualUser, actualValue] = await activatorInstance.getActivation.call(expectedConsumerId);
         const event = await calledOnce(activatorInstance, {
-            event: 'onCreateConsumerActivation',
+            event: 'onConsumerActivationCreated',
             args: {consumeId: expectedConsumerId}
         });
 

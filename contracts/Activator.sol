@@ -24,7 +24,7 @@ contract Activator {
     address public tracker;
     uint public minAmount;
 
-    event onCreateConsumerActivation(uint consumerId);
+    event onConsumerActivationCreated(uint consumerId);
     event onActivationConfirmed(uint consumerId, address consumerContract);
 
     constructor(uint _minAmount) public {
@@ -68,7 +68,7 @@ contract Activator {
         activations[consumerId].user = msg.sender;
         activations[consumerId].value = msg.value;
 
-        emit onCreateConsumerActivation(consumerId);
+        emit onConsumerActivationCreated(consumerId);
     }
 
     // User MUST manually call this function to get back their Ether when:
@@ -77,7 +77,8 @@ contract Activator {
     function withdraw(uint consumerId)
     public
     activationExists(consumerId)
-    onlyActivationOwner(consumerId) {
+    onlyActivationOwner(consumerId)
+    {
 
         uint returnValue = activations[consumerId].value;
         delete activations[consumerId];
@@ -119,7 +120,7 @@ contract Activator {
 
         delete activations[consumerId];
 
-        emit onActivationConfirmed(consumerId, consumerContract);
+        emit onActivationConfirmed(consumerId, address(consumerContract));
     }
 
     function getActivation(uint consumerId)
