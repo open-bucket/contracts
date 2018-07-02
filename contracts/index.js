@@ -5,13 +5,11 @@ const {compile} = require('solc');
 const {readFileSync} = require('fs');
 const {resolve} = require('path');
 
-const ActivatorContractSource = readFileSync(resolve(__dirname, 'Activator.sol'), 'UTF-8');
-const ConsumerContractSource = readFileSync(resolve(__dirname, 'Consumer.sol'), 'UTF-8');
-
 class CompilationService {
     constructor() {
         if (!CompilationService.instance) {
-            this._compiledActivatorContract = null;
+            this._compiledConsumerActivatorContract = null;
+            this._compiledProducerActivatorContract = null;
             this._compiledConsumerContract = null;
             CompilationService.instance = this;
         }
@@ -21,19 +19,28 @@ class CompilationService {
     _compileContracts() {
         const output = compile({
             sources: {
-                'Consumer.sol': ConsumerContractSource,
-                'Activator.sol': ActivatorContractSource,
+                'Consumer.sol': readFileSync(resolve(__dirname, 'Consumer.sol'), 'UTF-8'),
+                'ConsumerActivator.sol': readFileSync(resolve(__dirname, 'ConsumerActivator.sol'), 'UTF-8'),
+                'ProducerActivator.sol': readFileSync(resolve(__dirname, 'ProducerActivator.sol'), 'UTF-8'),
             }
         }, 1);
-        this._compiledActivatorContract = output.contracts['Activator.sol:Activator'];
+        this._compiledConsumerActivatorContract = output.contracts['ConsumerActivator.sol:ConsumerActivator'];
+        this._compiledProducerActivatorContract = output.contracts['ProducerActivator.sol:ProducerActivator'];
         this._compiledConsumerContract = output.contracts['Consumer.sol:Consumer'];
     }
 
-    get compiledActivatorContract() {
-        if (!this._compiledActivatorContract) {
+    get compiledConsumerActivatorContract() {
+        if (!this._compiledConsumerActivatorContract) {
             this._compileContracts();
         }
-        return this._compiledActivatorContract;
+        return this._compiledConsumerActivatorContract;
+    }
+
+    get compiledProducerActivatorContract() {
+        if (!this._compiledProducerActivatorContract) {
+            this._compileContracts();
+        }
+        return this._compiledProducerActivatorContract;
     }
 
     get compiledConsumerContract() {
