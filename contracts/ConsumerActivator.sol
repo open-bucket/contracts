@@ -13,7 +13,7 @@ import "./Consumer.sol";
 // - If not (consumerId is unrecognised by Tracker or the consumerId is already activated),
 //  User can withdraw their Ether using withdraw() function.
 //  If user withdraw their Ether before the ConsumerContract is created (Tracker will confirm this), the consumer still in INACTIVE state
-contract Activator {
+contract ConsumerActivator {
 
     struct Activation {
         address user;
@@ -24,7 +24,7 @@ contract Activator {
     address public tracker;
     uint public minAmount;
 
-    event onConsumerActivationCreated(uint consumerId);
+    event onActivationCreated(uint consumerId);
     event onActivationConfirmed(uint consumerId, address consumerContract);
 
     constructor(uint _minAmount) public {
@@ -68,7 +68,7 @@ contract Activator {
         activations[consumerId].user = msg.sender;
         activations[consumerId].value = msg.value;
 
-        emit onConsumerActivationCreated(consumerId);
+        emit onActivationCreated(consumerId);
     }
 
     // User MUST manually call this function to get back their Ether when:
@@ -115,7 +115,7 @@ contract Activator {
     {
         uint prepaidPayment = activations[consumerId].value;
 
-        // Activator use its money to send to consumer. But Tracker pays the gas for that.
+        // ConsumerActivator use its money to send to consumer. But Tracker pays the gas for that.
         Consumer consumerContract = (new Consumer).value(prepaidPayment)(consumerId);
 
         delete activations[consumerId];

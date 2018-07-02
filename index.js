@@ -9,9 +9,12 @@ const BPromise = require('bluebird');
  */
 const {
     ETHEREUM_NODE_URL,
-    ACTIVATOR_ADDRESS,
-    ACTIVATOR_MIN_AMOUNT,
+    CONSUMER_ACTIVATOR_ADDRESS,
+    PRODUCER_ACTIVATOR_ADDRESS,
+    CONSUMER_ACTIVATOR_MIN_AMOUNT,
+    PRODUCER_ACTIVATOR_ACTIVATION_FEE,
     GAS_PRICE,
+    GAS_LIMIT,
     TRACKER_ADDRESS
 } = require('./config');
 const CompilationService = require('./contracts');
@@ -20,46 +23,89 @@ class ContractService {
     constructor() {
         if (!ContractService.instance) {
             this._web3 = new Web3(ETHEREUM_NODE_URL);
-            this._activatorContractInstance = new this._web3.eth.Contract(
-                JSON.parse(CompilationService.compiledActivatorContract.interface),
-                ACTIVATOR_ADDRESS
-            );
             ContractService.instance = this;
         }
         return ContractService.instance;
     }
 
-    async _deployActivatorContractP(minAmount) {
-        const accounts = await this.getAccountsP();
-        this._activatorContractInstance = await this._activatorContractInstance
+    async _deployConsumerActivatorContractP(minAmount) {
+        this._consumerActivatorContractInstance = await this._consumerActivatorContractInstance
             .deploy({
-                data: CompilationService.compiledActivatorContract.bytecode,
+                data: CompilationService.compiledConsumerActivatorContract.bytecode,
                 arguments: [minAmount]
             })
             .send({
                 from: TRACKER_ADDRESS,
                 gasPrice: GAS_PRICE,
-                gas: '4712388'
+                gas: GAS_LIMIT
             });
-        return this._activatorContractInstance;
+        return this._consumerActivatorContractInstance;
     }
 
-    async createActivationP({accountIndex, value, consumerId}) {
+    async _deployProducerActivatorContractP(activationFee) {
+        this._producerActivatorContractInstance = await this._producerActivatorContractInstance
+            .deploy({
+                data: CompilationService.compiledProducerActivatorContract.bytecode,
+                arguments: [activationFee]
+            })
+            .send({
+                from: TRACKER_ADDRESS,
+                gasPrice: GAS_PRICE,
+                gas: GAS_LIMIT
+            });
+        return this._producerActivatorContractInstance;
+    }
+
+    async createConsumerActivationP({accountIndex, value, consumerId}) {
         const accounts = await this.getAccountsP();
-        return this._activatorContractInstance.methods
+        const activatorInstance = await this.getConsumerActivatorContractInstanceP();
+        return activatorInstance.methods
             .createActivation(consumerId)
             .send({
                 from: accounts[accountIndex].address,
                 value,
-                gasPrice: GAS_PRICE
+                gasPrice: GAS_PRICE,
+                gas: GAS_LIMIT
             });
     }
 
-    async getActivatorContractInstanceP() {
-        if (!this._activatorContractInstance.options.address) {
-            return this._deployActivatorContractP(ACTIVATOR_MIN_AMOUNT);
+    async createProducerActivationP({accountIndex, value, producerId}) {
+        const accounts = await this.getAccountsP();
+        const activatorInstance = await this.getProducerActivatorContractInstanceP();
+        return activatorInstance.methods
+            .createActivation(producerId)
+            .send({
+                from: accounts[accountIndex].address,
+                value: PRODUCER_ACTIVATOR_ACTIVATION_FEE,
+                gasPrice: GAS_PRICE,
+                gas: GAS_LIMIT
+            });
+    }
+
+    async getConsumerActivatorContractInstanceP() {
+        if (!this._consumerActivatorContractInstance) {
+            this._consumerActivatorContractInstance = new this._web3.eth.Contract(
+                JSON.parse(CompilationService.compiledConsumerActivatorContract.interface),
+                CONSUMER_ACTIVATOR_ADDRESS
+            );
         }
-        return this._activatorContractInstance;
+        if (!this._consumerActivatorContractInstance.options.address) {
+            return this._deployConsumerActivatorContractP(CONSUMER_ACTIVATOR_MIN_AMOUNT);
+        }
+        return this._consumerActivatorContractInstance;
+    }
+
+    async getProducerActivatorContractInstanceP() {
+        if (!this._producerActivatorContractInstance) {
+            this._producerActivatorContractInstance = new this._web3.eth.Contract(
+                JSON.parse(CompilationService.compiledProducerActivatorContract.interface),
+                PRODUCER_ACTIVATOR_ADDRESS
+            );
+        }
+        if (!this._producerActivatorContractInstance.options.address) {
+            return this._deployProducerActivatorContractP(PRODUCER_ACTIVATOR_ACTIVATION_FEE);
+        }
+        return this._producerActivatorContractInstance;
     }
 
     async getAccountsP() {
@@ -76,13 +122,25 @@ class ContractService {
         return require('./config');
     }
 
-    async confirmActivationP(consumerId) {
-        return this._activatorContractInstance.methods
+    async confirmConsumerActivationP(consumerId) {
+        const activatorInstance = await this.getConsumerActivatorContractInstanceP();
+        return activatorInstance.methods
             .confirmActivation(consumerId)
             .send({
                 from: TRACKER_ADDRESS,
                 gasPrice: GAS_PRICE,
-                gas: '4712388'
+                gas: GAS_LIMIT
+            });
+    }
+
+    async confirmProducerActivationP(producerId) {
+        const activatorInstance = await this.getProducerActivatorContractInstanceP();
+        return activatorInstance.methods
+            .confirmActivation(producerId)
+            .send({
+                from: TRACKER_ADDRESS,
+                gasPrice: GAS_PRICE,
+                gas: GAS_LIMIT
             });
     }
 }

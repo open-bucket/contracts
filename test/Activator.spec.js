@@ -1,7 +1,7 @@
-const Activator = artifacts.require('./Activator.sol');
+const ConsumerActivator = artifacts.require('./ConsumerActivator.sol');
 const {calledOnce} = require('../utils');
 
-contract('Activator', accounts => {
+contract('ConsumerActivator', accounts => {
 
     let activatorInstance;
     const account = accounts[0];
@@ -10,7 +10,7 @@ contract('Activator', accounts => {
     const gasPrice = web3.toWei(2, 'gwei');
 
     beforeEach(async () => {
-        activatorInstance = await Activator.new(minAmount, {
+        activatorInstance = await ConsumerActivator.new(minAmount, {
             from: tracker,
             gasPrice
         });
@@ -35,7 +35,7 @@ contract('Activator', accounts => {
         await activatorInstance.createActivation(expectedConsumerId, {value: expectedValue, gasPrice});
         const [actualUser, actualValue] = await activatorInstance.getActivation.call(expectedConsumerId);
         const event = await calledOnce(activatorInstance, {
-            event: 'onConsumerActivationCreated',
+            event: 'onActivationCreated',
             args: {consumeId: expectedConsumerId}
         });
 
@@ -156,7 +156,7 @@ contract('Activator', accounts => {
 
         // THEN
 
-        // User Activation is deleted in Activator
+        // User Activation is deleted in ConsumerActivator
         const [actualUser, actualValue] = await activatorInstance.getActivation.call(consumerId);
         assert.equal(actualUser.toString(10), 0);
         assert.equal(actualValue.toString(10), 0);
@@ -170,7 +170,7 @@ contract('Activator', accounts => {
         // Consumer balance has correct the value that the user send to
         assert.equal(consumerBalance, value);
 
-        // Activator transfer its money received to Consumer
+        // ConsumerActivator transfer its money received to Consumer
         assert.equal(valueActivatorTransferred.toString(10), value);
 
         // Tracker pays the gas for the operation
