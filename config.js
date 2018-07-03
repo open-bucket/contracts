@@ -1,5 +1,5 @@
 module.exports = {
-    ETHEREUM_NODE_URL: process.env.OBN_ETHEREUM_NODE_URL || 'http://127.0.0.1:7545', // Ganache
+    ETHEREUM_NODE_URL: process.env.OBN_ETHEREUM_NODE_URL || 'ws://127.0.0.1:7545', // Ganache
     CONSUMER_ACTIVATOR_ADDRESS: process.env.OBN_CONSUMER_ACTIVATOR_ADDRESS || '',
     PRODUCER_ACTIVATOR_ADDRESS: process.env.OBN_PRODUCER_ACTIVATOR_ADDRESS || '',
     // Ganache accounts[9] with MNEMONIC: salmon reopen news visual estate such shell struggle where attend educate express
