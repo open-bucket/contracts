@@ -25,7 +25,7 @@ contract ConsumerActivator {
     uint public minAmount;
 
     event onActivationCreated(uint consumerId);
-    event onActivationConfirmed(uint consumerId, address consumerContract);
+    event onActivationConfirmed(uint consumerId, address consumerAddress, address consumerContract);
 
     constructor(uint _minAmount) public {
         // Tracker creates this contract
@@ -114,13 +114,13 @@ contract ConsumerActivator {
     activationExists(consumerId)
     {
         uint prepaidPayment = activations[consumerId].value;
+        address consumerAddress = activations[consumerId].user;
 
-        // ConsumerActivator use its money to send to consumer. But Tracker pays the gas for that.
-        Consumer consumerContract = (new Consumer).value(prepaidPayment)(consumerId);
+        Consumer consumerContract = (new Consumer).value(prepaidPayment)(consumerAddress, tracker);
+
+        emit onActivationConfirmed(consumerId, consumerAddress, address(consumerContract));
 
         delete activations[consumerId];
-
-        emit onActivationConfirmed(consumerId, address(consumerContract));
     }
 
     function getActivation(uint consumerId)
