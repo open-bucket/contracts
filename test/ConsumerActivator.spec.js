@@ -42,7 +42,7 @@ contract('ConsumerActivator', accounts => {
         // THEN
         assert.equal(actualUser, account);
         assert.equal(actualValue.toString(10), expectedValue);
-        assert.equal(event.args.consumerId.toString(10), expectedConsumerId);
+        assert.equal(event.args.modelId.toString(10), expectedConsumerId);
     });
 
     it('should NOT able to create duplicate activation', async () => {
@@ -170,7 +170,7 @@ contract('ConsumerActivator', accounts => {
         // Consumer balance has correct the value that the user send to
         assert.equal(consumerBalance, value);
 
-        // ConsumerActivator transfer its money received to Consumer
+        // ConsumerActivator transfer its received money to Consumer
         assert.equal(valueActivatorTransferred.toString(10), value);
 
         // Tracker pays the gas for the operation

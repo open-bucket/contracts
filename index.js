@@ -22,7 +22,7 @@ const CompilationService = require('./contracts');
 class ContractService {
     constructor() {
         if (!ContractService.instance) {
-            this._web3 = new Web3(ETHEREUM_NODE_URL);
+            this._web3 = null;
             ContractService.instance = this;
         }
         return ContractService.instance;
@@ -84,7 +84,7 @@ class ContractService {
 
     async getConsumerActivatorContractInstanceP() {
         if (!this._consumerActivatorContractInstance) {
-            this._consumerActivatorContractInstance = new this._web3.eth.Contract(
+            this._consumerActivatorContractInstance = new this.web3.eth.Contract(
                 JSON.parse(CompilationService.compiledConsumerActivatorContract.interface),
                 CONSUMER_ACTIVATOR_ADDRESS
             );
@@ -97,7 +97,7 @@ class ContractService {
 
     async getProducerActivatorContractInstanceP() {
         if (!this._producerActivatorContractInstance) {
-            this._producerActivatorContractInstance = new this._web3.eth.Contract(
+            this._producerActivatorContractInstance = new this.web3.eth.Contract(
                 JSON.parse(CompilationService.compiledProducerActivatorContract.interface),
                 PRODUCER_ACTIVATOR_ADDRESS
             );
@@ -110,9 +110,9 @@ class ContractService {
 
     async getAccountsP() {
         if (!this._accounts) {
-            const accountAddresses = await this._web3.eth.getAccounts();
+            const accountAddresses = await this.web3.eth.getAccounts();
             const accountBalances = await BPromise.all(accountAddresses
-                .map(account => this._web3.eth.getBalance(account)));
+                .map(account => this.web3.eth.getBalance(account)));
             this._accounts = accountAddresses.map((address, index) => ({address, balance: accountBalances[index]}));
         }
         return this._accounts;
@@ -120,6 +120,13 @@ class ContractService {
 
     get configs() {
         return require('./config');
+    }
+
+    get web3() {
+        if (!this._web3) {
+            this._web3 = new Web3(ETHEREUM_NODE_URL);
+        }
+        return this._web3;
     }
 
     async confirmConsumerActivationP(consumerId) {
