@@ -20,6 +20,7 @@ class CompilationService {
         const output = compile({
             sources: {
                 'Consumer.sol': readFileSync(resolve(__dirname, 'Consumer.sol'), 'UTF-8'),
+                'Activator.sol': readFileSync(resolve(__dirname, 'Activator.sol'), 'UTF-8'),
                 'ConsumerActivator.sol': readFileSync(resolve(__dirname, 'ConsumerActivator.sol'), 'UTF-8'),
                 'ProducerActivator.sol': readFileSync(resolve(__dirname, 'ProducerActivator.sol'), 'UTF-8'),
             }

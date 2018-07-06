@@ -42,7 +42,7 @@ contract('ConsumerActivator', accounts => {
         // THEN
         assert.equal(actualUser, account);
         assert.equal(actualValue.toString(10), expectedValue);
-        assert.equal(event.args.consumerId.toString(10), expectedConsumerId);
+        assert.equal(event.args.modelId.toString(10), expectedConsumerId);
     });
 
     it('should NOT able to create duplicate activation', async () => {
