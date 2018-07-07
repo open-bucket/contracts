@@ -108,6 +108,16 @@ class ContractService {
         return this._producerActivatorContractInstance;
     }
 
+    async getConsumerContractInstanceP(consumerContractAddress) {
+        if (!this._consumerContractInstance) {
+            this._consumerContractInstance = new this.web3.eth.Contract(
+                JSON.parse(CompilationService.compiledConsumerContract.interface),
+                consumerContractAddress
+            );
+        }
+        return this._consumerContractInstance;
+    }
+
     async getAccountsP() {
         if (!this._accounts) {
             const accountAddresses = await this.web3.eth.getAccounts();
@@ -144,6 +154,37 @@ class ContractService {
         const activatorInstance = await this.getProducerActivatorContractInstanceP();
         return activatorInstance.methods
             .confirmActivation(producerId)
+            .send({
+                from: TRACKER_ADDRESS,
+                gasPrice: GAS_PRICE,
+                gas: GAS_LIMIT
+            });
+    }
+
+    async getConsumerContractActualBalanceP(contractAddress, consumerAddress) {
+        const instance = await this.getConsumerContractInstanceP(contractAddress);
+
+        return instance.methods.getBalance(consumerAddress).call();
+    }
+
+    async getPriceP(address) {
+        const instance = await this.getConsumerContractInstanceP(address);
+        const [weiPerByteServed, weiPerByteStored] = await BPromise.all([
+            instance.methods.weiPerByteServed().call(),
+            instance.methods.weiPerByteStored().call()
+        ]);
+        return {weiPerByteServed, weiPerByteStored};
+    }
+
+    async confirmProducerServingP(address, servingProducers) {
+        const instance = await this.getConsumerContractInstanceP(address);
+        const producerAddressArr = servingProducers.map(p => p.address);
+        const servingBytesArr = servingProducers.map(p => p.servingBytes);
+        console.log('INSIDE confirmProducerServingP, address', address);
+        console.log('INSIDE confirmProducerServingP, producerAddressArr', producerAddressArr);
+        console.log('INSIDE confirmProducerServingP, servingBytesArr', servingBytesArr);
+        return instance.methods
+            .serves(producerAddressArr, servingBytesArr)
             .send({
                 from: TRACKER_ADDRESS,
                 gasPrice: GAS_PRICE,
