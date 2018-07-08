@@ -161,10 +161,10 @@ class ContractService {
             });
     }
 
-    async getConsumerContractActualBalanceP(contractAddress, consumerAddress) {
+    async getConsumerContractActualBalanceP(contractAddress, address) {
         const instance = await this.getConsumerContractInstanceP(contractAddress);
 
-        return instance.methods.getBalance(consumerAddress).call();
+        return instance.methods.getBalance(address).call();
     }
 
     async getPriceP(address) {
@@ -180,9 +180,6 @@ class ContractService {
         const instance = await this.getConsumerContractInstanceP(address);
         const producerAddressArr = servingProducers.map(p => p.address);
         const servingBytesArr = servingProducers.map(p => p.servingBytes);
-        console.log('INSIDE confirmProducerServingP, address', address);
-        console.log('INSIDE confirmProducerServingP, producerAddressArr', producerAddressArr);
-        console.log('INSIDE confirmProducerServingP, servingBytesArr', servingBytesArr);
         return instance.methods
             .serves(producerAddressArr, servingBytesArr)
             .send({
@@ -190,6 +187,15 @@ class ContractService {
                 gasPrice: GAS_PRICE,
                 gas: GAS_LIMIT
             });
+    }
+
+    async withdrawFromConsumerContract(consumerContractAddress, fromAddress) {
+        const instance = await this.getConsumerContractInstanceP(consumerContractAddress);
+        return instance.methods.withdraw().send({
+            from: fromAddress,
+            gasPrice: GAS_PRICE,
+            gas: GAS_LIMIT
+        });
     }
 }
 
