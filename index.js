@@ -180,9 +180,6 @@ class ContractService {
         const instance = await this.getConsumerContractInstanceP(address);
         const producerAddressArr = servingProducers.map(p => p.address);
         const servingBytesArr = servingProducers.map(p => p.servingBytes);
-        console.log('INSIDE confirmProducerServingP, address', address);
-        console.log('INSIDE confirmProducerServingP, producerAddressArr', producerAddressArr);
-        console.log('INSIDE confirmProducerServingP, servingBytesArr', servingBytesArr);
         return instance.methods
             .serves(producerAddressArr, servingBytesArr)
             .send({
