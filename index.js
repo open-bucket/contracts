@@ -33,8 +33,8 @@ class ContractService {
 
     get web3() {
         if (!this._web3) {
-            // eslint-disable-next-line no-undef
-            if (Web3) { // We require web3 as <script> tag in browser, in that case Web3 instance is already available.
+            // We require web3 as <script> tag in browser, in that case Web3 instance is already available.
+            if (typeof Web3 !== 'undefined') {
                 // eslint-disable-next-line no-undef
                 this._web3 = new Web3(ETHEREUM_NODE_URL);
             } else {
