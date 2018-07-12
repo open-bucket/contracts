@@ -7,7 +7,7 @@
   },
   "scripts": {
     "prepublish": "npm run compile",
-    "compile": "node .\\scripts\\compile.js",
+    "compile": "node ./scripts/compile.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

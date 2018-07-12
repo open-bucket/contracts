@@ -4,6 +4,7 @@
 const { readFileSync } = require('fs');
 const { resolve } = require('path');
 
+
 class CompilationService {
     constructor() {
         if (!CompilationService.instance) {
@@ -16,8 +17,7 @@ class CompilationService {
     }
 
     _loadCompiledContracts() {
-        let output = readFileSync(resolve(__dirname, 'constracts.json'), 'UTF-8');
-        output = JSON.parse(output);
+        const output = require('./constracts.json');
         this._compiledConsumerActivatorContract = output.contracts['ConsumerActivator.sol:ConsumerActivator'];
         this._compiledProducerActivatorContract = output.contracts['ProducerActivator.sol:ProducerActivator'];
         this._compiledConsumerContract = output.contracts['Consumer.sol:Consumer'];
