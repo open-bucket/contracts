@@ -12,4 +12,4 @@ const output = compile({
         'ProducerActivator.sol': readFileSync(`${CONTRACT_PATH}/ProducerActivator.sol`, 'UTF-8'),
     }
 }, 1);
-writeFileSync(`${CONTRACT_PATH}/constracts.json`, JSON.stringify(output));
+writeFileSync(`${CONTRACT_PATH}/contracts.json`, JSON.stringify(output));
