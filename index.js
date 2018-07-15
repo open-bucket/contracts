@@ -1,7 +1,6 @@
 /**
  * Lib imports
  */
-const Web3 = require('web3');
 const BPromise = require('bluebird');
 
 /**
@@ -26,6 +25,24 @@ class ContractService {
             ContractService.instance = this;
         }
         return ContractService.instance;
+    }
+
+    get configs() {
+        return require('./config');
+    }
+
+    get web3() {
+        if (!this._web3) {
+            // We require web3 as <script> tag in browser, in that case Web3 instance is already available.
+            if (typeof Web3 !== 'undefined') {
+                // eslint-disable-next-line no-undef
+                this._web3 = new Web3(ETHEREUM_NODE_URL);
+            } else {
+                const Web3 = require('web3');
+                this._web3 = new Web3(ETHEREUM_NODE_URL);
+            }
+        }
+        return this._web3;
     }
 
     async _deployConsumerActivatorContractP(minAmount) {
@@ -69,7 +86,7 @@ class ContractService {
             });
     }
 
-    async createProducerActivationP({accountIndex, value, producerId}) {
+    async createProducerActivationP({accountIndex, producerId}) {
         const accounts = await this.getAccountsP();
         const activatorInstance = await this.getProducerActivatorContractInstanceP();
         return activatorInstance.methods
@@ -126,17 +143,6 @@ class ContractService {
             this._accounts = accountAddresses.map((address, index) => ({address, balance: accountBalances[index]}));
         }
         return this._accounts;
-    }
-
-    get configs() {
-        return require('./config');
-    }
-
-    get web3() {
-        if (!this._web3) {
-            this._web3 = new Web3(ETHEREUM_NODE_URL);
-        }
-        return this._web3;
     }
 
     async confirmConsumerActivationP(consumerId) {
