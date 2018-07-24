@@ -2,11 +2,8 @@
   "name": "@open-bucket/contracts-ganache-server",
   "version": "0.0.1",
   "main": "index.js",
-  "directories": {
-    "start": "node index.js"
-  },
   "scripts": {
-    "prepublish": "npm run compile"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
