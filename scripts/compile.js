@@ -1,6 +1,6 @@
-const { compile } = require('solc');
-const { readFileSync, writeFileSync } = require('fs');
-const { resolve } = require('path');
+const {compile} = require('solc');
+const {readFileSync, writeFileSync} = require('fs');
+const {resolve} = require('path');
 
 const CONTRACT_PATH = resolve(__dirname, '../contracts');
 

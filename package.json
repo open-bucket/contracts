@@ -1,14 +1,12 @@
 {
   "name": "@open-bucket/contracts",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "prepublish": "npm run compile",
-    "compile": "node ./scripts/compile.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
@@ -28,8 +26,7 @@
   "devDependencies": {
     "bytes": "^3.0.0",
     "eslint": "^5.0.1",
-    "ramda": "^0.25.0",
-    "solc": "^0.4.24"
+    "ramda": "^0.25.0"
   },
   "description": ""
 }
