@@ -1,17 +1,16 @@
 {
-  "name": "@open-bucket/contracts",
-  "version": "0.0.10",
+  "name": "@open-bucket/contracts-ganache-server",
+  "version": "0.0.1",
   "main": "index.js",
   "directories": {
-    "test": "test"
+    "start": "node index.js"
+  },
+  "scripts": {
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/open-bucket/contracts.git"
-  },
-  "scripts": {
-    "prepublish": "npm run compile",
-    "compile": "node ./scripts/compile.js"
   },
   "author": "open-bucket",
   "license": "MIT",
@@ -21,13 +20,6 @@
   "homepage": "https://github.com/open-bucket/contracts#readme",
   "dependencies": {
     "bluebird": "^3.5.1",
-    "web3": "^1.0.0-beta.34"
-  },
-  "devDependencies": {
-    "bytes": "^3.0.0",
-    "eslint": "^5.0.1",
-    "ramda": "^0.25.0",
-    "solc": "^0.4.24"
-  },
-  "description": ""
+    "ganache-core": "^2.1.4"
+  }
 }
