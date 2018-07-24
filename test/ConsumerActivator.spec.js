@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const ConsumerActivator = artifacts.require('./ConsumerActivator.sol');
 const {calledOnce} = require('../utils');
 

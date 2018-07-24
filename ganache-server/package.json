@@ -1,0 +1,22 @@
+{
+  "name": "@open-bucket/contracts-ganache-server",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-bucket/contracts.git"
+  },
+  "author": "open-bucket",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/open-bucket/contracts/issues"
+  },
+  "homepage": "https://github.com/open-bucket/contracts#readme",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "ganache-core": "^2.1.4"
+  }
+}
