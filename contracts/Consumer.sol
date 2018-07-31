@@ -20,7 +20,7 @@ contract Consumer {
     }
 
     modifier onlyConsumer() {
-        require(msg.sender == consumer, "Only Consumer can top up");
+        require(msg.sender == consumer, "Only Consumer can call this.");
         _;
     }
 
