@@ -19,6 +19,11 @@ contract Consumer {
         _;
     }
 
+    modifier onlyConsumer() {
+        require(msg.sender == consumer, "Only Consumer can top up");
+        _;
+    }
+
     modifier balanceExistsOrNotEmpty() {
         require(balances[msg.sender] != 0, "Balance is not exists or is empty.");
         _;
@@ -46,6 +51,15 @@ contract Consumer {
     function stores(address[] producerArr, uint[] servedBytesArr) public onlyTracker {
         transferMany(producerArr, servedBytesArr, weiPerByteStored);
     }
+
+    function topUp()
+    public
+    payable
+    onlyConsumer
+    {
+        balances[msg.sender] += msg.value;
+    }
+
 
     function withdraw()
     public
