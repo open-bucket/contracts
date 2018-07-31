@@ -203,6 +203,16 @@ class ContractService {
             gas: GAS_LIMIT
         });
     }
+
+    async topUpConsumerContract(consumerContractAddress, consumerAddress, value) {
+        const instance = await this.getConsumerContractInstanceP(consumerContractAddress);
+        return instance.methods.topUp().send({
+            from: consumerAddress,
+            gasPrice: GAS_PRICE,
+            gas: GAS_LIMIT,
+            value
+        });
+    }
 }
 
 const ContractServiceInstance = new ContractService();
