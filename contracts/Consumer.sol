@@ -60,7 +60,6 @@ contract Consumer {
         balances[msg.sender] += msg.value;
     }
 
-
     function withdraw()
     public
     balanceExistsOrNotEmpty

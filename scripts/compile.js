@@ -12,4 +12,11 @@ const output = compile({
         'ProducerActivator.sol': readFileSync(`${CONTRACT_PATH}/ProducerActivator.sol`, 'UTF-8'),
     }
 }, 1);
-writeFileSync(`${CONTRACT_PATH}/contracts.json`, JSON.stringify(output));
+
+if (!output.errors) {
+    writeFileSync(`${CONTRACT_PATH}/contracts.json`, JSON.stringify(output));
+} else {
+    // eslint-disable-next-line no-console
+    console.log('Error while compile contracts', output.errors);
+}
+

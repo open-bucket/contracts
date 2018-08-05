@@ -172,7 +172,6 @@ contract('Consumer', accounts => {
     });
 
     it('should allow consumer to topUp', async () => {
-        // GIVEN
 
         // WHEN
         const consumerBalanceBefore = await getConsumerBalance();
@@ -184,18 +183,23 @@ contract('Consumer', accounts => {
         const consumerBalanceAfter = await getConsumerBalance();
 
         // THEN
-        assert(contractBalanceBefore.lt(contractBalanceAfter));
         // assert consumer balance in consumer contract
-        assert(consumerBalanceAfter
+        assert.isTrue(contractBalanceAfter
+            .minus(contractBalanceBefore)
+            .eq(web3.toWei(1, 'ether')));
+
+        // assert consumer balance in consumer contract
+        assert.isTrue(consumerBalanceAfter
             .minus(consumerBalanceBefore)
             .eq(web3.toWei(1, 'ether')));
     });
 
 
     it('should NOT allow other than consumer to topUp', async () => {
-        await consumerInstance.topUp({from: accounts[3], gasPrice, value: web3.toWei(1, 'ether')})
+        await consumerInstance.topUp({from: tracker, gasPrice, value: web3.toWei(1, 'ether')})
         // THEN
-            .then(() => assert(false))
-            .catch(() => assert(true));
+            .catch(() => {
+                assert.isTrue(true);
+            });
     });
 });
