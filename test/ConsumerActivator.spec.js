@@ -17,7 +17,6 @@ contract('ConsumerActivator', accounts => {
         });
     });
 
-    //https://github.com/vitiko/solidity-test-example/blob/master/test/Congress.js
     it('should be able to receive value on creation & have correct balance, tracker & minAmount', async () => {
 
         const actualMinAmount = await activatorInstance.minAmount.call();

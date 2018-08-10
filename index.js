@@ -169,7 +169,6 @@ class ContractService {
 
     async getConsumerContractActualBalanceP(contractAddress, address) {
         const instance = await this.getConsumerContractInstanceP(contractAddress);
-
         return instance.methods.getBalance(address).call();
     }
 
@@ -202,6 +201,27 @@ class ContractService {
             gasPrice: GAS_PRICE,
             gas: GAS_LIMIT
         });
+    }
+
+    async topUpConsumerContract(consumerContractAddress, fromAddress, value) {
+        const instance = await this.getConsumerContractInstanceP(consumerContractAddress);
+        return instance.methods.topUp().send({
+            from: fromAddress,
+            gasPrice: GAS_PRICE,
+            gas: GAS_LIMIT,
+            value
+        });
+    }
+
+    async getConsumerContractDataP(consumerContractAddress) {
+        const instance = await this.getConsumerContractInstanceP(consumerContractAddress);
+        const [weiPerByteServed, weiPerByteStored, consumer, tracker] = await BPromise.all([
+            instance.methods.weiPerByteServed().call(),
+            instance.methods.weiPerByteStored().call(),
+            instance.methods.consumer().call(),
+            instance.methods.tracker().call()
+        ]);
+        return {weiPerByteServed, weiPerByteStored, consumer, tracker};
     }
 }
 
