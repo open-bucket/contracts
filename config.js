@@ -4,8 +4,8 @@ module.exports = {
     ETHEREUM_NODE_URL: process.env.OBN_ETHEREUM_NODE_URL || 'http://127.0.0.1:7545',
     CONSUMER_ACTIVATOR_ADDRESS: process.env.OBN_CONSUMER_ACTIVATOR_ADDRESS || '',
     PRODUCER_ACTIVATOR_ADDRESS: process.env.OBN_PRODUCER_ACTIVATOR_ADDRESS || '',
-    // Ganache accounts[9] with MNEMONIC: salmon reopen news visual estate such shell struggle where attend educate express
-    TRACKER_ADDRESS: process.env.OBN_TRACKER_ADDRESS || '0x143Ade676D33F648Beb5097F6f3606b45249c34c',
+    // Ganache accounts[9] with MNEMONIC: oxygen need era start item party hedgehog more cart almost okay flag
+    TRACKER_ADDRESS: process.env.OBN_TRACKER_ADDRESS || '0xeD9E49E82cDa452B355C74eD8a46EE695B64cD7b',
     // CONSUMER_ACTIVATOR_MIN_AMOUNT: process.env.OBN_CONSUMER_ACTIVATOR_MIN_AMOUNT || '1000000000000', // 1 finney -> wei
     CONSUMER_ACTIVATOR_MIN_AMOUNT: process.env.OBN_CONSUMER_ACTIVATOR_MIN_AMOUNT || '1000000000000000000', // 1 ether -> wei
     PRODUCER_ACTIVATOR_ACTIVATION_FEE: process.env.OBN_PRODUCER_ACTIVATOR_ACTIVATION_FEE || '1000000000000', // 1 finney -> wei

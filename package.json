@@ -1,6 +1,6 @@
 {
   "name": "@open-bucket/contracts",
-  "version": "0.0.15",
+  "version": "0.0.9",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -21,7 +21,7 @@
   "homepage": "https://github.com/open-bucket/contracts#readme",
   "dependencies": {
     "bluebird": "^3.5.1",
-    "web3": "^1.0.0-beta.34"
+    "web3": "^1.0.0-beta.35"
   },
   "devDependencies": {
     "bytes": "^3.0.0",
