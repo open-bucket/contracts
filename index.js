@@ -126,13 +126,13 @@ class ContractService {
     }
 
     async getConsumerContractInstanceP(consumerContractAddress) {
-        if (!this._consumerContractInstance) {
-            this._consumerContractInstance = new this.web3.eth.Contract(
-                JSON.parse(CompilationService.compiledConsumerContract.interface),
-                consumerContractAddress
-            );
+        if (!this._consumerContractInterface) {
+            this._consumerContractInterface = JSON.parse(CompilationService.compiledConsumerContract.interface);
         }
-        return this._consumerContractInstance;
+        return new this.web3.eth.Contract(
+            this._consumerContractInterface,
+            consumerContractAddress
+        )
     }
 
     async getAccountsP() {
